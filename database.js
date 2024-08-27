@@ -5,6 +5,36 @@ const databaseData = {
     database: 'sudoku.dmi'
 };
 
+const createPool = async (mysql) => {
+    try {
+        let tmpPool = mysql.createPool({
+            user: databaseData.user,
+            password: databaseData.password,
+            host: databaseData.host,
+        });
+        const [rows] = await tmpPool.query(`
+            select schema_name 
+            from information_schema.schemata 
+            where schema_name = ?
+        `, [databaseData.database]);
+
+        if(rows.length == 0) {
+            await tmpPool.query(`create database \`${databaseData.database}\``);
+        }
+
+        const pool = mysql.createPool({
+            user: databaseData.user,
+            password: databaseData.password,
+            host: databaseData.host,
+            database: databaseData.database,
+        })
+
+        return pool;
+    } catch (err) {
+        throw err;
+    }
+}
+
 const databaseInit = async (pool) => {
     try {
         
@@ -44,9 +74,11 @@ const databaseInit = async (pool) => {
             )    
         `)
 
+        return pool;
+
     } catch (err) {
         throw err;
     }
 }
 
-module.exports = {databaseData, databaseInit};
+module.exports = {createPool, databaseData, databaseInit};

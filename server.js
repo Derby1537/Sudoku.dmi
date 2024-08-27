@@ -803,28 +803,8 @@ const replaceHTMLTags = (string) => {
 
 httpServer.listen(port, async () => {
     try {
-        let tmpPool = mysql.createPool({
-            user: database.databaseData.user,
-            password: database.databaseData.password,
-            host: database.databaseData.host,
-        });
-        const [rows] = await tmpPool.query(`
-            select schema_name 
-            from information_schema.schemata 
-            where schema_name = ?
-        `, [database.databaseData.database]);
-
-        if(rows.length == 0) {
-            await tmpPool.query(`create database \`${database.databaseData.database}\``);
-        }
-
-        pool = mysql.createPool({
-            user: database.databaseData.user,
-            password: database.databaseData.password,
-            host: database.databaseData.host,
-            database: database.databaseData.database,
-        })
-        database.databaseInit(pool);
+        pool = await database.createPool(mysql);
+        await database.databaseInit(pool);
     } catch (err) {
         console.log(err);
     }
