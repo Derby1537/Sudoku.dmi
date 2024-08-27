@@ -27,7 +27,7 @@ Sudoku.dmi requires [Node.js](https://nodejs.org) and [MySQL](https://www.mysql.
 
 1. Start by cloning the repository
 ```bash
-git clone https://github.com/UniCT-WebDevelopment/Sudoku_dmi.git
+git clone https://github.com/Derby1537/Sudoku.dmi.git
 cd Sudoku_dmi
 ```
 
